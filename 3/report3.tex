@@ -27,43 +27,205 @@
 
 \section{工夫した点・考察}
 
-% 各自が工夫した点について書く．
-% このレポートの内容が，他の人のものとどう違うのかを主張する．
-% 客観的な事実を中心に記述する．
-
-% （参考項目）
-% ・採用した設計，論理に関する検討（代替案との比較）
-% ・プログラムの作成にあたって創意工夫した点
-% ・テストの十分性（すべてのプログラムパスを網羅しているか）
-% ・完成に至るまでに発生したバグの現象とその処置
-% ・プログラムの機能的完成度（改良，拡張の余地）
-% ・プログラムの効率
-% ・その他
-
+\begin{itemize}
+\item ユニットテストを書いた．
+\end{itemize}
 
 \section{感想}
 
-% 自由記述．
-% 苦労した点などあれば書く．主観的な内容でも構わない．
-
-
+入力出力のチェックが大変だった．途中で何度も家に帰りたくなった．\\
 
 \section{ソース}
-\lstinputlisting{bubblesort.c}
+\begin{lstlisting}
+#include <stdio.h> 
+#include <stdlib.h>
+#define MAX_N 9999
+#define MAX_INPUT 50
+#define MAX_OUTPUT 10
+
+void bubblesort(int array[], int n);
+void swap(int *a, int *b);
+int input(int *array);
+void output(int *array, int n);
+// Test
+int sorted(int array[], int n);
+void assert(int t);
+void showArray(int array[], int n);
+void test_all(void);
+
+int main(void) {
+  int array[MAX_N];
+  int n = input(array);
+  bubblesort(array, n);
+  output(array, n);
+
+  return 0;
+}
+
+// 入力行数を返す
+int input(int *array) {
+  char buf[100];
+  int i = 0;
+
+  while(fgets(buf, MAX_N, stdin) != NULL) {
+    sscanf(buf, "%d\n", &array[i]);
+    if (!(1 <= array[i] && array[i] <= MAX_N)) {
+      printf("おいおい、入力エラーしとるやんけ: %d\n", array[i]);
+      exit(1);
+    }
+    i++;
+  }
+
+  if (MAX_INPUT < i) {
+    printf("おいおい、入力数がおおすぎるぞ: %dコもあるやんけ\n", i);
+    exit(1);
+  }
+
+  return i;
+}
+
+void output(int *array, int n) {
+  int i;
+  for(i = 0; i < n; i++) {
+    if ((i+1) % MAX_OUTPUT == 0) {
+      printf("%5d\n", array[i]);
+    } else {
+      printf("%5d", array[i]);
+    }
+  }
+  printf("\n");
+}
+
+void swap(int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+void bubblesort(int array[], int n) {
+  int i, j;
+
+  for (i = 0; i < n - 1; i++)
+    for (j = 0; j < n - 1; j++) 
+      if (array[j] > array[j+1])
+        swap(&array[j], &array[j+1]);
+
+}
+
+// Test
+void assert(int t) {
+  if (!t) {
+    printf("Test Failed!\n");
+  }
+}
+
+int sorted(int array[], int n) {
+  int i;
+  for (i = 0; i < n - 1; i++)
+    if (array[i] > array[i+1])
+      return 0;
+
+  return 1;
+}
+
+void showArray(int array[], int n) {
+  int i;
+
+  for (i = 0; i < n - 1; i++) 
+    printf("%d ", array[i]);
+
+  printf("%d\n", array[n-1]);
+}
+
+void test_all(void) {
+  int array[] = {5,3,2,7,9};
+
+  bubblesort(array, 5);
+  assert(sorted(array, 5));
+}
+\end{lstlisting}
 
 \section{動作例}
 
 % 典型的な実行例を示す．
 
-\subsection*{入力}
-%\begin{verbatim}
-%
-%\end{verbatim}
+\subsection*{入力1}
+\begin{verbatim}
+50
+49
+48
+47
+46
+45
+44
+43
+42
+41
+40
+39
+38
+37
+36
+35
+34
+33
+32
+31
+30
+29
+28
+27
+26
+25
+24
+23
+22
+21
+20
+19
+18
+17
+16
+9999
+14
+13
+12
+11
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+\end{verbatim}
 
 
-\subsection*{出力}
-%\begin{verbatim}
-%
-%\end{verbatim}
+\subsection*{出力1}
+\begin{verbatim}
+    1    2    3    4    5    6    7    8    9   10
+   11   12   13   14   16   17   18   19   20   21
+   22   23   24   25   26   27   28   29   30   31
+   32   33   34   35   36   37   38   39   40   41
+   42   43   44   45   46   47   48   49   50 9999
+\end{verbatim}
+
+\subsection*{入力2}
+\begin{verbatim}
+2
+11322999
+1
+2
+3
+\end{verbatim}
+
+
+\subsection*{出力2}
+\begin{verbatim}
+おいおい、入力エラーしとるやんけ: 11322999
+\end{verbatim}
 
 \end{document}
