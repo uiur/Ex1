@@ -49,9 +49,9 @@ void output(int *array, int n) {
   int i;
   for(i = 0; i < n; i++) {
     if ((i+1) % MAX_OUTPUT == 0) {
-      printf("%d\n", array[i]);
+      printf("%5d\n", array[i]);
     } else {
-      printf("%d ", array[i]);
+      printf("%5d", array[i]);
     }
   }
   printf("\n");
