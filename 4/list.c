@@ -7,6 +7,7 @@ typedef struct list {
 } List;
 
 void insert(List *l, int n);
+void delete(List **l, int n);
 List* newList(int n);
 void showList(List *l);
 
@@ -16,7 +17,13 @@ int main(void) {
   insert(l, 2);
   insert(l, 9);
   insert(l, 3);
+  insert(l, 9);
+  showList(l);
 
+  delete(&l, 9);
+  showList(l);
+
+  delete(&l, 1);
   showList(l);
 
   return 0;
@@ -31,23 +38,45 @@ List* newList(int n) {
 }
 
 void insert(List *l, int n) {
-  List *current = l, *next = l->next, *nl;
+  List *prev = NULL, *current = l, *nl;
   nl = (List *)malloc(sizeof(List));
   nl->data = n;
 
-  while (next != NULL) {
-    if (next->data >= n) {
-      current->next = nl;
-      nl->next = next;
+
+  while (current != NULL) {
+    if (current->data >= n) {
+      if (prev != NULL) 
+        prev->next = nl;
+      nl->next = current;
       return;
     }
 
-    current = next;
-    next = current->next;
+    prev = current;
+    current = current->next;
   }
 
-  current->next = nl;
+  prev->next = nl;
   nl->next = NULL;
+}
+
+// prev == NULL 
+void delete(List **l, int n) {
+  List *prev = NULL, *current = *l, *temp;
+  while (current != NULL) {
+    if (current->data == n) {
+      if (prev != NULL) {
+        prev->next = current->next; 
+      } else {
+        *l = current->next;
+      }
+      temp = current->next;
+      free(current);
+      current = temp;
+      continue;
+    }
+    prev = current;
+    current = current->next;
+  }
 }
 
 void showList(List *l) {
