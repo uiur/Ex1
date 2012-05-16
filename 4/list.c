@@ -59,7 +59,6 @@ void insert(List *l, int n) {
   nl->next = NULL;
 }
 
-// prev == NULL 
 void delete(List **l, int n) {
   List *prev = NULL, *current = *l, *temp;
   while (current != NULL) {
