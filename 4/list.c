@@ -1,52 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MIN_N 1
+#define MAX_N 9999
+
 typedef struct list {
   int data;
   struct list *next;
 } List;
 
-void insert(List *l, int n);
+void insert(List **l, int n);
 void delete(List **l, int n);
-List* newList(int n);
+void addTail(List **l, int n);
 void showList(List *l);
 
+// Input
+int readOne(void);
+
 int main(void) {
-  List *l = newList(1);
-  insert(l, 10);
-  insert(l, 2);
-  insert(l, 9);
-  insert(l, 3);
-  insert(l, 9);
+  int i, n;
+  List *l = NULL;
+
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    addTail(&l, n);
+  }
   showList(l);
 
-  delete(&l, 9);
-  showList(l);
-
-  delete(&l, 1);
-  showList(l);
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    insert(&l, n);
+    showList(l);
+  }
+ 
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    delete(&l, n);
+    showList(l);
+  }
 
   return 0;
 }
 
-List* newList(int n) {
-  List *l = (List *)malloc(sizeof(List));
-  l->data = n;
-  l->next = NULL;
-
-  return l;
-}
-
-void insert(List *l, int n) {
-  List *prev = NULL, *current = l, *nl;
+void insert(List **l, int n) {
+  List *prev = NULL, *current = *l, *nl;
   nl = (List *)malloc(sizeof(List));
   nl->data = n;
 
-
   while (current != NULL) {
     if (current->data >= n) {
-      if (prev != NULL) 
+      if (prev != NULL) {
         prev->next = nl;
+      } else {
+        *l = nl;
+      }
       nl->next = current;
       return;
     }
@@ -78,14 +85,40 @@ void delete(List **l, int n) {
   }
 }
 
+void addTail(List **l, int n) {
+  List *current = *l, *nl = (List *)malloc(sizeof(List));
+  nl->data = n;
+  nl->next = NULL;
+
+  if (current == NULL) {
+    *l = nl;
+    return;
+  }
+
+  while (current->next != NULL) {
+    current = current->next;
+  }
+
+  current->next = nl;
+}
+
 void showList(List *l) {
   List *current = l;
-  while (1) {
-    if (current->next == NULL) {
-      printf("%d\n", current->data);
-      break;
-    }
+  while (current != NULL) {
     printf("%d ", current->data);
     current = current->next;
   }
+  printf("\n");
+}
+
+// Input
+int readOne(void) {
+  int n;
+  fscanf(stdin, "%d", &n);
+  if (!(MIN_N <= n && n <= MAX_N)) {
+    fprintf(stderr, "Invalid Input: %d\n", n);
+    exit(1);
+  }
+
+  return n;
 }
