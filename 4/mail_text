@@ -1,0 +1,164 @@
+---comment---
+工夫した点
+
+1. 特にそれといった工夫をしなかった
+
+苦労した点
+
+1. 操作によって先頭要素が変わるときの扱いがすぐにうまい方法を考えられなかった
+2. なかなか授業に出席できなかった
+
+---source---
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MIN_N 1
+#define MAX_N 9999
+
+typedef struct list {
+  int data;
+  struct list *next;
+} List;
+
+void insert(List **l, int n);
+void delete(List **l, int n);
+void addTail(List **l, int n);
+void showList(List *l);
+
+// Input
+int readOne(void);
+
+int main(void) {
+  int i, n;
+  List *l = NULL;
+
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    addTail(&l, n);
+  }
+  showList(l);
+
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    insert(&l, n);
+    showList(l);
+  }
+ 
+  for (i = 0; i < 10; i++) {
+    n = readOne();
+    delete(&l, n);
+    showList(l);
+  }
+
+  return 0;
+}
+
+void insert(List **l, int n) {
+  List *prev = NULL, *current = *l, *nl;
+  nl = (List *)malloc(sizeof(List));
+  nl->data = n;
+
+  while (current != NULL) {
+    if (current->data >= n) {
+      if (prev != NULL) {
+        prev->next = nl;
+      } else {
+        *l = nl;
+      }
+      nl->next = current;
+      return;
+    }
+
+    prev = current;
+    current = current->next;
+  }
+
+  prev->next = nl;
+  nl->next = NULL;
+}
+
+void delete(List **l, int n) {
+  List *prev = NULL, *current = *l, *temp;
+  while (current != NULL) {
+    if (current->data == n) {
+      if (prev != NULL) {
+        prev->next = current->next; 
+      } else {
+        *l = current->next;
+      }
+      temp = current->next;
+      free(current);
+      current = temp;
+      continue;
+    }
+    prev = current;
+    current = current->next;
+  }
+}
+
+void addTail(List **l, int n) {
+  List *current = *l, *nl = (List *)malloc(sizeof(List));
+  nl->data = n;
+  nl->next = NULL;
+
+  if (current == NULL) {
+    *l = nl;
+    return;
+  }
+
+  while (current->next != NULL) {
+    current = current->next;
+  }
+
+  current->next = nl;
+}
+
+void showList(List *l) {
+  List *current = l;
+  while (current != NULL) {
+    printf("%d ", current->data);
+    current = current->next;
+  }
+  printf("\n");
+}
+
+// Input
+int readOne(void) {
+  int n;
+  fscanf(stdin, "%d", &n);
+  if (!(MIN_N <= n && n <= MAX_N)) {
+    fprintf(stderr, "Invalid Input: %d\n", n);
+    exit(1);
+  }
+
+  return n;
+}
+
+---input---
+10 9 8 7 6 5 4 3 2 1
+1 2 3 4 5 6 7 8 9 10
+10 9 8 7 6 1 2 3 4 5
+
+---output---
+10 9 8 7 6 5 4 3 2 1 
+1 10 9 8 7 6 5 4 3 2 1 
+1 2 10 9 8 7 6 5 4 3 2 1 
+1 2 3 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 8 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 8 9 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 8 9 10 10 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 8 9 9 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 8 8 7 6 5 4 3 2 1 
+1 2 3 4 5 6 7 7 6 5 4 3 2 1 
+1 2 3 4 5 6 6 5 4 3 2 1 
+1 2 3 4 5 5 4 3 2 1 
+2 3 4 5 5 4 3 2 
+3 4 5 5 4 3 
+4 5 5 4 
+5 5 
+
+
