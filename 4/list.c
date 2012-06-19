@@ -12,6 +12,7 @@ typedef struct list {
 void insert(List **l, int n);
 void delete(List **l, int n);
 void addTail(List **l, int n);
+void removeTail(List **l);
 void showList(List *l);
 
 // Input
@@ -37,6 +38,10 @@ int main(void) {
     n = readOne();
     delete(&l, n);
     showList(l);
+  }
+
+  while (l != NULL) {
+    removeTail(&l);
   }
 
   return 0;
@@ -100,6 +105,23 @@ void addTail(List **l, int n) {
   }
 
   current->next = nl;
+}
+
+void removeTail(List **l) {
+  List *current = *l, *prev = NULL;
+  while (current->next != NULL) {
+    prev = current;
+    current = current->next;
+  }
+
+  if (prev != NULL) {
+    prev->next = NULL;
+    free(current);
+  } else {
+    free(current);
+    *l = NULL;
+  }
+
 }
 
 void showList(List *l) {
