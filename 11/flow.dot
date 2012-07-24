@@ -1,0 +1,16 @@
+digraph G {
+  input[shape = box];
+  bubblesort[shape = box];
+  qsort[shape = box];
+  error[shape = box];
+  output[shape = box];
+
+  start -> input;
+    input -> bubblesort;
+      bubblesort -> output;
+    input -> qsort;
+      qsort -> output;
+    input -> error;
+      error -> end;
+    output -> end;
+}

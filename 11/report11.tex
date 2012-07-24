@@ -1,0 +1,416 @@
+\documentclass[a4j]{jarticle}
+\usepackage{listings,graphicx}
+
+\begin{document}
+
+\title{計算機科学実験及び演習1 報告書\\ 
+% ↓ここに課題番号を記入
+\bf 課題11}
+% ↓ここに自分の氏名を記入
+\author{杉本風斗 \\
+学籍番号: 1029232337}
+\西暦
+% ↓ここに提出日を記入
+\date{提出日: \today}
+%\date{提出日: 1998年6月30日}
+\maketitle
+
+\section{外部仕様}
+\begin{verbatim}
+$ ./gya-tasukete11
+\end{verbatim}
+標準入力から入力を受け取る. 1行目にソーティングモジュールの番号を, 2行目以降にソートするデータを空白または改行区切りを与える.\\
+指定したソーティングモジュールを用いて入力されたデータをソートし, ソートしたデータを標準出力に出力する.\\
+\\
+ソーティングモジュールの番号は, それぞれ 0 はバブルソートモジュール, 1 はクイックソートモジュールに対応する.\\
+\\
+ソーティングモジュールの番号は以下のようにコマンド引数の1番目に与えることもできる.\\
+
+\begin{verbatim}
+$ ./gya-tasukete11 0 < data
+\end{verbatim}
+
+% 外部仕様とは，ユーザから見えるプログラムの機能，振舞い，使用法などを
+% 記述したものである．
+
+\subsection{プログラム名（コマンド名）}
+gya-tasukete11
+
+% ここにプログラム名を書くのみ．
+
+\subsection{プログラム引数}
+ソーティングモジュールの番号 (与えない場合は, 標準入力から受け取る).\\
+
+% 各引数について説明する．
+% なければ「なし」と記入．
+% 複数ある場合は {enumerate} で記述．
+
+\subsection{プログラムの機能}
+
+1行目は用いるソーティングモジュールの番号, 2行目以降に入力データを標準入力から受け取る.\\
+ソーティングモジュールにはバブルソート, クイックソートを用いることができる.\\
+入力データを指定されたソーティングモジュールでソートし, 1行に10コずつ出力する.\\
+
+% 数行程度で説明．参考資料の dead copy とならないよう，配慮せよ．
+
+\subsection{入出力データおよび参照ファイル}
+
+指定された入力データを用いた.\\
+
+% 端末で入出力されるデータ，およびファイルから入出力されるデータについて
+% 説明する．後者について，なければ「なし」と明記．
+% {itemize} または {description} で記述．
+
+\subsection{実行例}
+バブルソートモジュールを指定し入力データを与える例を示す.\\
+
+\subsubsection{入力}
+\begin{verbatim}
+0
+3198 4399 2962 1572 2704 395 2537 46 672 0
+12137 0 300 568 1794 498 3015 1284 1299 1439
+(略)
+712 1964 828 894 2293 2560 505 1202 432 0
+0 2 0 0 1035 946 2616 2426 1147 1371
+\end{verbatim}
+\subsubsection{出力}
+\begin{verbatim}
+       0       0       0       0       0       0       0       0       0       0
+       0       0       0       0       0       0       0       0       0       0
+(略)
+\end{verbatim}
+% 典型的な実行例を示す．
+
+\subsection{エラー条件とエラー処理機能}
+不正なソーティングモジュール番号が入力に与えられたとき標準エラーにエラーメッセージを出力する.\\
+\subsubsection{入力例}
+\begin{verbatim}
+$ ./gya-tasukete11 -1
+\end{verbatim}
+
+\subsubsection{エラー出力}
+\begin{verbatim}
+そのソーティングモジュール番号は不正です: -1
+\end{verbatim}
+% 複数のエラー条件がある場合は {enumerate} または {itemize} で記述．
+% エラー処理の例も示す．
+
+\subsection{アルゴリズムの流れ図}
+
+% アルゴリズムの流れを示すフローチャート．
+% 次の３行のコメントをはずし，図のファイル名，拡大縮小率を調整する．
+%\begin{center}
+%  \includegraphics[scale=0.6]{xxx.eps}
+%\end{center}
+
+\section{内部仕様}
+% 内部仕様とは，外部仕様に示された機能，振舞いをプログラムがいかに実現
+% しているか，プログラムの構成や論理を記述したものである．
+
+\subsection{モジュール仕様}
+
+\subsubsection{swap}
+\begin{verbatim}
+void swap(int *a, int *b);
+\end{verbatim}
+
+\begin{description}
+\item[モジュールの機能]
+指定された2つの配列ポインタの中身を入れ替える.
+
+\item[モジュールインタフェース]
+\begin{enumerate}\mbox{}\\
+\item[引数] a, b: int型配列ポインタ
+\item[出力] void
+\end{enumerate}
+% 各引数の名前，型，用途の説明，入出力の別；返り値の型，用途の説明を
+% {enumerate} で記述．
+
+\item[内部変数]
+\begin{enumerate}\mbox{}\\
+\item[一時変数] int temp
+\end{enumerate}
+% 各変数の名前，型，用途の説明を {enumerate} で記述．
+% 構造体についてはそのフィールドについても同様に記述する．
+
+\item[論理]
+\begin{verbatim}
+一時変数を宣言;
+一時変数を用いてaとbを入れ替える;
+\end{verbatim}
+\end{description}
+
+
+\subsubsection{bubblesort}
+\begin{verbatim}
+void bubblesort(int *array, int n);
+\end{verbatim}
+\begin{description}
+\item[モジュールの機能]
+与えられたサイズnの配列をバブルソートする. 
+
+\item[モジュールインタフェース]
+\begin{enumerate}
+\item[引数] array: int型配列ポインタ
+\item[出力] void
+\end{enumerate}
+
+\item[論理]
+\begin{verbatim}
+for (0 <= i < n - 1)
+  for (0 <= j < n - 1)
+    if j+1番目よりもj番目のほうが大きい
+      swap(j番目, j+1番目);
+\end{verbatim}
+% C 構文を用いた疑似コードによる手続きの記述．
+% \begin{verbatim} ... \end{verbatim} で囲むとよい．
+\end{description}
+
+
+\subsubsection{qsort2}
+\begin{verbatim}
+void qsort2(int *array, int p, int q);
+\end{verbatim}
+\begin{description}
+\item[モジュールの機能]
+配列arrayをpからqまでの範囲でクイックソートする.
+
+\item[モジュールインタフェース]
+\begin{enumerate}
+\item[引数] array: int型配列ポインタ p,q: int型区間
+\item[出力] void
+\end{enumerate}
+
+\item[内部変数]
+\begin{enumerate}
+\item int pivot: ピボット
+\end{enumerate}
+% 各変数の名前，型，用途の説明を {enumerate} で記述．
+% 構造体についてはそのフィールドについても同様に記述する．
+
+\item[論理]
+\begin{verbatim}
+if (p >= q)
+  return;
+
+ピボットを配列から適当に選ぶ;
+配列の中身をピボットの前にピボットよりも小さい数を,後ろにピボットよりも大きい数がくるようにする;
+
+qsort2(pからピボットの直前);
+qsort2(ピボットの後ろからqまで);
+\end{verbatim}
+% C 構文を用いた疑似コードによる手続きの記述．
+% \begin{verbatim} ... \end{verbatim} で囲むとよい．
+\end{description}
+
+
+\subsubsection{w\_qsort2}
+\begin{verbatim}
+void w_qsort2(int *array, int n);
+\end{verbatim}
+\begin{description}
+\item[モジュールの機能]
+与えられたサイズnの配列をクイックソートする. \\
+qsort2に渡すだけ.\\
+\end{description}
+
+
+\subsubsection{input}
+\begin{verbatim}
+void input(int *array, int *n);
+\end{verbatim}
+
+\begin{description}
+\item[モジュールの機能]
+標準入力からデータを受け取る.\\
+
+\item[モジュールインタフェース]
+\begin{enumerate}
+\item arrayは入力データ列
+\item nはint型ポインタ. 入力データのサイズを代入する.
+\end{enumerate}
+
+\item[論理]
+\begin{verbatim}
+int i = 0;
+while (一行読み取る) {
+  while (数をひとつ読み取ってarrayに代入)
+    i++;
+}
+
+*n = i;
+\end{verbatim} 
+\end{description}
+
+
+\subsubsection{output}
+\begin{verbatim}
+void output(int *array, int n);
+\end{verbatim}
+\begin{description}
+\item[モジュールの機能]
+標準出力にarrayの中身を整形して出力する.\\
+
+\item[モジュールインタフェース]
+\begin{enumerate}
+\item arrayは入力データ列
+\item nは入力データのサイズ
+\end{enumerate}
+
+\item[論理]
+\begin{verbatim}
+for (配列array)
+  中身を出力;
+\end{verbatim}
+\end{description}
+
+
+\section{プログラム開発の経過}
+\begin{description}
+\item[問題の分析と解法の検討] 10分
+\item[モジュール構造設計] 10分
+\item[モジュール内論理設計/プログラミング] 10分
+\item[プログラムテスト，デバッグ] 10分
+\item[仕様書の作成] 1ヶ月
+\end{description}
+% プログラム開発の各段階で要した時間配分（工数）の概略を記す．
+% あともどりがあった場合はその状況についても説明する．
+% 各段階とは次の通り：
+% 1. 問題の分析と解法の検討
+% 2. モジュール構造設計
+% 3. モジュール内論理設計/プログラミング
+% 4. プログラムテスト，デバッグ
+% 5. 仕様書の作成
+
+\section{感想}
+仕様書はクソだ.\\
+
+% 自由記述．
+% シラバスに示した参考書以外のものを参照した場合，それも記す．
+
+\newpage
+\section*{付録}
+\begin{verbatim}
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_N 100000
+#define MAX_OUTPUT 10
+#define FUNC_N 2
+
+void swap(int *a, int *b);
+void bubblesort(int *array, int n);
+void qsort2(int *array, int p, int q);
+void w_qsort2(int *array, int n);
+void input(int *array, int *n);
+void output(int *array, int n);
+
+
+int main(int argc, char *argv[]) {
+  char buf[1000];
+  int array[MAX_N];
+  int n, func_i;
+
+  void (*func[FUNC_N])(int *, int) = { bubblesort, w_qsort2 };
+
+  // batch mode
+  if (argc >= 2) {
+    sscanf(argv[1], "%d", &func_i);
+  } else {
+    fgets(buf, 1000, stdin);
+    sscanf(buf, "%d", &func_i);
+  }
+
+  if (!(0 < func_i && func_i < FUNC_N)) {
+    fprintf(stderr, "そのソーティングモジュール番号は不正です: %d\n", func_i);
+    exit(1);
+  }
+
+  input(array, &n);
+  func[func_i](array, n);
+  output(array, n);
+
+  return 0;
+}
+
+// 入力行数を返す
+void input(int *array, int *n) {
+  char buf[MAX_N];
+  int i = 0, start_i, read_i;
+
+  while(fgets(buf, MAX_N, stdin) != NULL) {
+    start_i = read_i = 0;
+    while (sscanf(buf + start_i, "%d %n", &array[i++], &read_i) != EOF) {
+      start_i += read_i;
+    }
+  }
+
+  *n = i;
+}
+
+void output(int *array, int n) {
+  int i;
+  for(i = 0; i < n; i++) {
+    if ((i+1) % MAX_OUTPUT == 0) {
+      printf("%8d\n", array[i]);
+    } else {
+      printf("%8d", array[i]);
+    }
+  }
+  printf("\n");
+}
+
+// arrayを区間p,qでソートする
+// p <= q
+void qsort2(int *array, int p, int q) {
+  int i, m, pivot = p;
+
+  if (p >= q) 
+    return;
+
+  // 先頭から3つとってその中央値をピボットにする
+  if (p - q >= 2) {
+    for (i = 0; i < 3; i++) {
+      if ((array[p+(i-1)%3] < array[i] && array[i] < array[p+(i+1)%3]) || (array[p+(i+1)%3] < array[i] && array[i] < array[p+(i-1)%3])) {
+        pivot = p;
+      }
+    }
+  }
+
+  swap(&array[pivot], &array[p]);
+
+  for (i = p+1, m = p; i <= q; i++) {
+    if (array[i] < array[p]) {
+      swap(&array[++m], &array[i]);
+    }
+  }
+
+  swap(&array[m], &array[p]);
+
+  swap(&array[pivot], &array[p]);
+
+  qsort2(array, p, m-1);
+  qsort2(array, m+1, q);
+}
+
+void w_qsort2(int *array, int n) {
+  qsort2(array, 0, n - 1);
+}
+
+void swap(int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+void bubblesort(int array[], int n) {
+  int i, j;
+
+  for (i = 0; i < n - 1; i++)
+    for (j = 0; j < n - 1; j++) 
+      if (array[j] > array[j+1])
+        swap(&array[j], &array[j+1]);
+
+}
+\end{verbatim}
+
+\end{document}
