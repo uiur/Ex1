@@ -1,5 +1,5 @@
 \documentclass[a4j]{jarticle}
-\usepackage{listings,graphicx}
+\usepackage[dvipdfmx]{graphicx}
 
 \begin{document}
 
@@ -30,20 +30,11 @@ $ ./gya-tasukete11
 $ ./gya-tasukete11 0 < data
 \end{verbatim}
 
-% 外部仕様とは，ユーザから見えるプログラムの機能，振舞い，使用法などを
-% 記述したものである．
-
 \subsection{プログラム名（コマンド名）}
 gya-tasukete11
 
-% ここにプログラム名を書くのみ．
-
 \subsection{プログラム引数}
 ソーティングモジュールの番号 (与えない場合は, 標準入力から受け取る).\\
-
-% 各引数について説明する．
-% なければ「なし」と記入．
-% 複数ある場合は {enumerate} で記述．
 
 \subsection{プログラムの機能}
 
@@ -56,10 +47,6 @@ gya-tasukete11
 \subsection{入出力データおよび参照ファイル}
 
 指定された入力データを用いた.\\
-
-% 端末で入出力されるデータ，およびファイルから入出力されるデータについて
-% 説明する．後者について，なければ「なし」と明記．
-% {itemize} または {description} で記述．
 
 \subsection{実行例}
 バブルソートモジュールを指定し入力データを与える例を示す.\\
@@ -96,12 +83,19 @@ $ ./gya-tasukete11 -1
 % エラー処理の例も示す．
 
 \subsection{アルゴリズムの流れ図}
+\begin{center}
+  \includegraphics[width=100mm]{main.pdf}
+\end{center}
 
-% アルゴリズムの流れを示すフローチャート．
-% 次の３行のコメントをはずし，図のファイル名，拡大縮小率を調整する．
-%\begin{center}
-%  \includegraphics[scale=0.6]{xxx.eps}
-%\end{center}
+\subsubsection{バブルソート}
+\begin{center}
+  \includegraphics[width=100mm]{bubblesort.pdf}
+\end{center}
+
+\subsubsection{クイックソート}
+\begin{center}
+  \includegraphics[width=100mm]{qsort.pdf}
+\end{center}
 
 \section{内部仕様}
 % 内部仕様とは，外部仕様に示された機能，振舞いをプログラムがいかに実現
@@ -116,24 +110,24 @@ void swap(int *a, int *b);
 
 \begin{description}
 \item[モジュールの機能]
-指定された2つの配列ポインタの中身を入れ替える.
+指定された2つの配列ポインタの中身を入れ替える.\\
 
-\item[モジュールインタフェース]
-\begin{enumerate}\mbox{}\\
-\item[引数] a, b: int型配列ポインタ
+\item[モジュールインタフェース]\mbox{}\\[-7mm]
+\begin{enumerate}
+\item[引数] int型配列ポインタa,b
 \item[出力] void
 \end{enumerate}
 % 各引数の名前，型，用途の説明，入出力の別；返り値の型，用途の説明を
 % {enumerate} で記述．
 
-\item[内部変数]
-\begin{enumerate}\mbox{}\\
-\item[一時変数] int temp
+\item[内部変数]\mbox{}\\[-7mm]
+\begin{enumerate}
+\item int tempは一時変数.
 \end{enumerate}
 % 各変数の名前，型，用途の説明を {enumerate} で記述．
 % 構造体についてはそのフィールドについても同様に記述する．
 
-\item[論理]
+\item[論理]\mbox{}\\[-7mm]
 \begin{verbatim}
 一時変数を宣言;
 一時変数を用いてaとbを入れ替える;
@@ -149,13 +143,13 @@ void bubblesort(int *array, int n);
 \item[モジュールの機能]
 与えられたサイズnの配列をバブルソートする. 
 
-\item[モジュールインタフェース]
+\item[モジュールインタフェース]\mbox{}\\[-7mm]
 \begin{enumerate}
 \item[引数] array: int型配列ポインタ
 \item[出力] void
 \end{enumerate}
 
-\item[論理]
+\item[論理]\mbox{}\\[-7mm]
 \begin{verbatim}
 for (0 <= i < n - 1)
   for (0 <= j < n - 1)
@@ -175,20 +169,20 @@ void qsort2(int *array, int p, int q);
 \item[モジュールの機能]
 配列arrayをpからqまでの範囲でクイックソートする.
 
-\item[モジュールインタフェース]
+\item[モジュールインタフェース]\mbox{}\\[-7mm]
 \begin{enumerate}
 \item[引数] array: int型配列ポインタ p,q: int型区間
 \item[出力] void
 \end{enumerate}
 
-\item[内部変数]
+\item[内部変数]\mbox{}\\[-7mm]
 \begin{enumerate}
 \item int pivot: ピボット
 \end{enumerate}
 % 各変数の名前，型，用途の説明を {enumerate} で記述．
 % 構造体についてはそのフィールドについても同様に記述する．
 
-\item[論理]
+\item[論理]\mbox{}\\[-7mm]
 \begin{verbatim}
 if (p >= q)
   return;
@@ -209,9 +203,8 @@ qsort2(ピボットの後ろからqまで);
 void w_qsort2(int *array, int n);
 \end{verbatim}
 \begin{description}
-\item[モジュールの機能]
-与えられたサイズnの配列をクイックソートする. \\
-qsort2に渡すだけ.\\
+\item[モジュールの機能]\mbox{}\\
+与えられたサイズnの配列をクイックソートする.\\内部でやってることはqsort2に引数を渡すだけ.\\
 \end{description}
 
 
@@ -224,13 +217,13 @@ void input(int *array, int *n);
 \item[モジュールの機能]
 標準入力からデータを受け取る.\\
 
-\item[モジュールインタフェース]
+\item[モジュールインタフェース]\mbox{}\\[-7mm]
 \begin{enumerate}
 \item arrayは入力データ列
 \item nはint型ポインタ. 入力データのサイズを代入する.
 \end{enumerate}
 
-\item[論理]
+\item[論理]\mbox{}\\[-7mm]
 \begin{verbatim}
 int i = 0;
 while (一行読み取る) {
@@ -251,18 +244,32 @@ void output(int *array, int n);
 \item[モジュールの機能]
 標準出力にarrayの中身を整形して出力する.\\
 
-\item[モジュールインタフェース]
+\item[モジュールインタフェース]\mbox{}\\[-7mm]
 \begin{enumerate}
 \item arrayは入力データ列
 \item nは入力データのサイズ
 \end{enumerate}
 
-\item[論理]
+\item[論理]\mbox{}\\[-7mm]
 \begin{verbatim}
 for (配列array)
   中身を出力;
 \end{verbatim}
 \end{description}
+
+\section{大域変数}
+なし
+\section{プログラムの評価}
+ソーティングモジュール毎に計測した実行時間を載せる.\\
+\begin{tabular}[t]{|c|c|}
+\hline
+アルゴリズム&時間(s)\\
+\hline
+バブルソート&0.85\\
+\hline
+クイックソート&0.01\\
+\hline
+\end{tabular}
 
 
 \section{プログラム開発の経過}
@@ -283,10 +290,7 @@ for (配列array)
 % 5. 仕様書の作成
 
 \section{感想}
-仕様書はクソだ.\\
-
-% 自由記述．
-% シラバスに示した参考書以外のものを参照した場合，それも記す．
+仕様書書くのはクソ.\\
 
 \newpage
 \section*{付録}
@@ -320,7 +324,7 @@ int main(int argc, char *argv[]) {
     sscanf(buf, "%d", &func_i);
   }
 
-  if (!(0 < func_i && func_i < FUNC_N)) {
+  if (!(0 <= func_i && func_i < FUNC_N)) {
     fprintf(stderr, "そのソーティングモジュール番号は不正です: %d\n", func_i);
     exit(1);
   }
@@ -411,6 +415,9 @@ void bubblesort(int array[], int n) {
         swap(&array[j], &array[j+1]);
 
 }
+
+
+
 \end{verbatim}
 
 \end{document}

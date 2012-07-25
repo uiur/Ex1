@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     sscanf(buf, "%d", &func_i);
   }
 
-  if (!(0 < func_i && func_i < FUNC_N)) {
+  if (!(0 <= func_i && func_i < FUNC_N)) {
     fprintf(stderr, "そのソーティングモジュール番号は不正です: %d\n", func_i);
     exit(1);
   }
